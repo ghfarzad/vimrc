@@ -15,7 +15,6 @@ set undodir=~/tmp/vim//
 
 "try to reload file every one second if the file changes
 "let g:timer = timer_start(1000, 'MyChecktime', {'repeat': -1})
-set autoread
 
 "highlight tabs and trailing whitespcae, put $ for extending offscreen
 set list
@@ -40,7 +39,7 @@ set noignorecase                "don't ignore case when searching
 set showmatch                   "show matching paranthesis
 set undofile                    "so you undo files past file close
 set nostartofline               "prevent the cursor from changing the current column when jumping to other lines
-set noautoread
+set autoread
 set noequalalways               "prevent auto resize of windows on split and close
 set visualbell
 set noerrorbells
