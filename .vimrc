@@ -1,6 +1,7 @@
 set ttymouse=xterm2 "Allow mouse to drag splits
-set mouse=a
 set t_Co=256
+
+set mouse=a
 syntax on
 
 filetype plugin on
@@ -35,7 +36,8 @@ set number
 set numberwidth=2
 set hlsearch
 set incsearch                   "show search matches as you type
-set noignorecase                "don't ignore case when searching
+set noignorecase
+set smartcase                   "case sensitive if search contains uppercase charachter
 set showmatch                   "show matching paranthesis
 set undofile                    "so you undo files past file close
 set nostartofline               "prevent the cursor from changing the current column when jumping to other lines
@@ -59,12 +61,11 @@ nnoremap <CR> o<Esc>k
 nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
 
-let mapleader=","
 set runtimepath^=~/.vim/bundle/command-t
 
 "edit/reload vimrc
-nmap <silent> <leader>ev :e $MYVIMRC<CR>
-nmap <silent> <leader>sv :so $MYVIMRC<CR>
+nmap <silent> <leader>v :e $MYVIMRC<CR>
+nmap <silent> <leader>s :so $MYVIMRC<CR>
 
 if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
