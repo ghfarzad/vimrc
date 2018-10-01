@@ -43,17 +43,19 @@ set incsearch                   "show search matches as you type
 set ignorecase
 set smartcase                   "case sensitive if search contains uppercase character
 set showmatch                   "show matching paranthesis
-set undofile                    "so you undo files past file close
 set nostartofline               "prevent the cursor from changing the current column when jumping to other lines
 set autoread
 set noequalalways               "prevent auto resize of windows on split and close
-set visualbell
-set noerrorbells
 set history=1000
-set undolevels=1000
 set colorcolumn=81
 set cursorcolumn
 set cursorline
+
+"No annoying sound on errors
+set noerrorbells
+set novisualbell
+set t_vb=
+set tm=500
 
 colorscheme gruvbox
 set background=dark
@@ -67,22 +69,37 @@ nnoremap <S-Tab> :bprevious<CR>
 
 set runtimepath^=~/.vim/bundle/command-t
 
-"edit/reload vimrc
-nmap <silent> <leader>v :e $MYVIMRC<CR>
-nmap <silent> <leader>s :so $MYVIMRC<CR>
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => persistent undo
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set undofile                " Save undos after file closes
+set undodir=$HOME/.vim/undo " where to save undo histories
+set undolevels=1000         " How many undos
+set undoreload=10000        " number of lines to save for undo
 
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Plugins
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-call plug#begin('~/.vim/plugged')
+if has('nvim')
+  call plug#begin('~/.local/share/nvim/plugged')
+else
+  call plug#begin('~/.vim/plugged')
+endif
+
+" Make sure you use single quotes
+
 Plug 'christoomey/vim-tmux-navigator'
+
 call plug#end()
 
 " <F2>: Exit, like <Esc> but works in TERMINAL mode
-
 imap    <silent> <F2> <Esc>l
 vmap    <silent> <F2> <Esc><F2>
 omap    <silent> <F2> <Esc><F2>
@@ -96,4 +113,17 @@ imap    <silent> <F4> <Esc><F4>i
 vmap    <silent> <F4> <Esc><F4>gv
 if has("nvim")
     tmap   <silent> <F4> <C-\><C-n><F4>i
+endif
+
+" Delete trailing white space on save
+fun! CleanExtraSpaces()
+    let save_cursor = getpos(".")
+    let old_query = getreg('/')
+    silent! %s/\s\+$//e
+    call setpos('.', save_cursor)
+    call setreg('/', old_query)
+endfun
+
+if has("autocmd")
+    autocmd BufWritePre *.h,*.cpp :call CleanExtraSpaces()
 endif
