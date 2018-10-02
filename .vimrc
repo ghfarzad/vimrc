@@ -1,10 +1,4 @@
-if !has("nvim")
-    set ttymouse=xterm2 " Allow mouse to drag splits
-    set t_Co=256
-endif
-
 set mouse=a
-syntax on
 
 filetype plugin on
 
@@ -12,37 +6,38 @@ set path=$PWD/**
 
 set dir=~/tmp/vim//
 set bdir=~/tmp/vim//
-set undodir=~/tmp/vim//
 
-"function MyChecktime(timer)
-"    checktime
-"endfunction
 
-"try to reload file every one second if the file changes
-"let g:timer = timer_start(1000, 'MyChecktime', {'repeat': -1})
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Text, tab, indennt related
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-"highlight tabs and trailing whitespcae, put $ for extending offscreen
-set list
-set listchars=tab:>.,trail:.,extends:$,nbsp:.
-
-set nowrap                      "don't wrap lines
-set expandtab
+set expandtab                   "Use spaces instaed of tabs
 set smarttab                    "insert tabs on the start of a line according shiftwidth, not tabstop
+set softtabstop=4               "indent w/ TAB key is 4 spaces
 set tabstop=4                   "a hard tab is 4 spaces
 set shiftwidth=4                "number of spaces for auto-indenting
-set softtabstop=4               "indent w/ TAB key is 4 spaces
-set backspace=indent,eol,start  "allow backspacing over everything in insert mode
 set autoindent
-set copyindent                  "copy previous indentation on autoindenting
 set smartindent
+set nowrap                      "don't wrap lines
+set copyindent                  "copy previous indentation on autoindenting
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => VIM user interface
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+set backspace=indent,eol,start  "allow backspacing over everything in insert mode
 set norelativenumber
 set number
 set numberwidth=2
+
 set hlsearch
 set incsearch                   "show search matches as you type
 set ignorecase
 set smartcase                   "case sensitive if search contains uppercase character
 set showmatch                   "show matching paranthesis
+
 set nostartofline               "prevent the cursor from changing the current column when jumping to other lines
 set autoread
 set noequalalways               "prevent auto resize of windows on split and close
@@ -57,23 +52,36 @@ set novisualbell
 set t_vb=
 set tm=500
 
-colorscheme gruvbox
-set background=dark
-
 "insert new line in normal mode
 nnoremap <CR> o<Esc>k
 
-"switching buffers
-nnoremap <Tab> :bnext<CR>
-nnoremap <S-Tab> :bprevious<CR>
+"highlight tabs and trailing whitespcae, put $ for extending offscreen
+set list
+set listchars=tab:>.,trail:.,extends:$,nbsp:.
 
-set runtimepath^=~/.vim/bundle/command-t
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Colors and Fonts
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+syntax on
+
+if !has("nvim")
+    set ttymouse=xterm2 " Allow mouse to drag splits
+    set t_Co=256
+endif
+
+colorscheme gruvbox
+set background=dark
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => persistent undo
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
 set undofile                " Save undos after file closes
-set undodir=$HOME/.vim/undo " where to save undo histories
+set undodir=~/tmp/vim//     " where to save undo histories
 set undolevels=1000         " How many undos
 set undoreload=10000        " number of lines to save for undo
 
@@ -81,11 +89,14 @@ set undoreload=10000        " number of lines to save for undo
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugins
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
 if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
+
+autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 
 if has('nvim')
   call plug#begin('~/.local/share/nvim/plugged')
@@ -96,8 +107,19 @@ endif
 " Make sure you use single quotes
 
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install --bin'}
+Plug 'junegunn/fzf.vim'
 
 call plug#end()
+
+" Map ctrl+f to fzf
+map <C-f> :Files<cr>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Farzad's stuff
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 
 " <F2>: Exit, like <Esc> but works in TERMINAL mode
 imap    <silent> <F2> <Esc>l
@@ -125,5 +147,5 @@ fun! CleanExtraSpaces()
 endfun
 
 if has("autocmd")
-    autocmd BufWritePre *.h,*.cpp :call CleanExtraSpaces()
+    autocmd BufWritePre *.h,*.cpp,*.yaml :call CleanExtraSpaces()
 endif
