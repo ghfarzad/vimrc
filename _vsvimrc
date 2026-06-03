@@ -1,0 +1,99 @@
+" ============================================================
+"  VsVim Configuration for Visual Studio (Windows)
+"  Place this file at %USERPROFILE%\_vsvimrc
+"
+"  VsVim only supports a subset of Vim — no plugins, no
+"  autocmds, no colorschemes. Keymaps and settings only.
+" ============================================================
+
+
+" ------------------------------------------------------------
+" Let Visual Studio control editor defaults (indentation,
+" tab size, etc.) — keeps things consistent with VS settings
+" ------------------------------------------------------------
+
+set vsvim_useeditordefaults
+
+
+" ------------------------------------------------------------
+" Basic Settings (VsVim supported)
+" ------------------------------------------------------------
+
+set ignorecase                " Case insensitive search
+set smartcase                 " Case sensitive if uppercase used
+set incsearch                 " Incremental search
+set hlsearch                  " Highlight search matches
+set scrolloff=5               " Keep context lines when scrolling
+
+
+" ------------------------------------------------------------
+" Clipboard
+" ------------------------------------------------------------
+
+set clipboard=unnamed         " Use system clipboard
+
+
+" ------------------------------------------------------------
+" Display
+" ------------------------------------------------------------
+
+set number                    " Show line numbers
+set relativenumber            " Relative line numbers
+set cursorline                " Highlight current line
+
+
+" ------------------------------------------------------------
+" Leader Key
+" ------------------------------------------------------------
+
+let mapleader=","
+
+
+" ------------------------------------------------------------
+" Key Mappings
+" ------------------------------------------------------------
+
+" Clear search highlight
+nnoremap <leader>h :nohlsearch<CR>
+
+" Fast save
+nnoremap <leader>w :w<CR>
+
+" Quit
+nnoremap <leader>q :q<CR>
+
+" Fast escape from insert mode
+inoremap jj <Esc>
+
+
+" ------------------------------------------------------------
+" Split / Window Navigation
+" ------------------------------------------------------------
+
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+
+" ------------------------------------------------------------
+" Notes
+" ------------------------------------------------------------
+
+" The following from your Mac vimrc are NOT supported in VsVim
+" and have been intentionally omitted:
+"
+"   - Plugins (vim-plug, fzf, vim-airline, etc.)
+"   - colorscheme / syntax settings (VS controls these)
+"   - autocmd / augroup blocks
+"   - set undofile / swapfile / backupdir
+"   - set mouse=a (VS controls mouse)
+"   - Resize split mappings (C-Up/Down/Left/Right)
+"   - Yank highlight (no autocmd support)
+"
+" To disable VsVim temporarily: Ctrl+Shift+F12
+" To reset VS key conflicts: Tools > Options > VsVim > Defaults
+
+" ============================================================
+"  End of _vsvimrc
+" ============================================================
