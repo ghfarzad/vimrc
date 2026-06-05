@@ -1,0 +1,231 @@
+" ============================================================
+"  Personal Vim Configuration
+"  Git Bash on Windows (Git for Windows built-in Vim)
+"  Place at: ~/.vimrc  (i.e. C:\Users\YourName\.vimrc)
+" ============================================================
+
+
+" ------------------------------------------------------------
+" Basic Settings
+" ------------------------------------------------------------
+
+set nocompatible              " Use Vim defaults (not vi)
+set encoding=utf-8
+set hidden                    " Allow switching buffers without saving
+set history=1000
+set autoread                  " Auto reload changed files
+
+syntax on
+filetype plugin indent on
+
+
+" ------------------------------------------------------------
+" Display / UI
+" ------------------------------------------------------------
+
+set number                    " Show line numbers
+set relativenumber            " Relative line numbers
+set cursorline                " Highlight current line
+set nocursorcolumn            " Disable column highlight (performance)
+set showcmd                   " Show command in status line
+set showmode                  " Show current mode
+set ruler
+set laststatus=2              " Always show status line
+set wildmenu                  " Better command completion
+set scrolloff=5               " Keep context when scrolling
+set sidescrolloff=5
+
+set background=dark
+colorscheme desert            " Default colorscheme
+
+
+" ------------------------------------------------------------
+" Input / Mouse / Terminal
+" ------------------------------------------------------------
+
+set mouse=a                   " Enable mouse support
+set ttyfast                   " Faster terminal redraw
+set lazyredraw                " Improve macro / scroll performance
+
+" Clipboard — Git Bash Vim may not have +clipboard compiled in.
+" Check with: vim --version | grep clipboard
+" If you see +clipboard, this works. If -clipboard, use "* register manually.
+if has('clipboard')
+    set clipboard=unnamed
+endif
+
+
+" ------------------------------------------------------------
+" Indentation / Formatting
+" ------------------------------------------------------------
+
+set expandtab                 " Use spaces instead of tabs
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set smartindent
+set autoindent
+
+set wrap                      " Enable line wrapping
+set linebreak                 " Wrap at word boundaries
+
+
+" ------------------------------------------------------------
+" Searching
+" ------------------------------------------------------------
+
+set ignorecase                " Case insensitive search
+set smartcase                 " Case sensitive if uppercase
+set incsearch                 " Incremental search
+set hlsearch                  " Highlight matches
+
+
+" ------------------------------------------------------------
+" File / Backup / Undo
+" ------------------------------------------------------------
+
+set undofile                  " Persistent undo
+
+" Unix-style paths that work inside Git Bash
+set dir=~/tmp/vim//
+set backupdir=~/tmp/vim//
+set undodir=~/tmp/vim//
+
+set noswapfile                " Disable swap
+
+" Create tmp dir if missing
+if !isdirectory(expand('~/tmp/vim'))
+    call mkdir(expand('~/tmp/vim'), 'p')
+endif
+
+
+" ------------------------------------------------------------
+" Path / File Navigation
+" ------------------------------------------------------------
+
+set path+=**
+
+set wildignore+=*/.git/*,*/node_modules/*,*/build/*,*/dist/*
+
+
+" ------------------------------------------------------------
+" Window / Split Behavior
+" ------------------------------------------------------------
+
+set splitbelow                " Horizontal splits below
+set splitright                " Vertical splits right
+set noequalalways             " Do not auto-resize splits
+
+autocmd VimEnter * wincmd =
+
+
+" ------------------------------------------------------------
+" Split Navigation
+" ------------------------------------------------------------
+
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+" Resize splits with Ctrl + Arrows
+nnoremap <C-Up>    :resize +2<CR>
+nnoremap <C-Down>  :resize -2<CR>
+nnoremap <C-Left>  :vertical resize -2<CR>
+nnoremap <C-Right> :vertical resize +2<CR>
+
+
+" ------------------------------------------------------------
+" Key Mappings
+" ------------------------------------------------------------
+
+let mapleader=","
+
+nnoremap <leader>h :nohlsearch<CR>
+nnoremap <leader>w :w<CR>
+nnoremap <leader>q :q<CR>
+nnoremap <C-f> :Files<CR>
+inoremap jj <Esc>
+
+" Highlight yanked text (Vim-native)
+augroup YankHighlight
+    autocmd!
+    autocmd TextYankPost * call matchadd('IncSearch', '\%' . line('.') . 'l', 100, -1) |
+                         \ call timer_start(200, {-> clearmatches()})
+augroup END
+
+
+" ------------------------------------------------------------
+" Plugin Manager (vim-plug)
+" ------------------------------------------------------------
+
+" Auto-install vim-plug if missing
+if empty(glob('~/.vim/autoload/plug.vim'))
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+call plug#begin('~/.vim/plugged')
+
+
+" ------------------------------------------------------------
+" Plugins
+" ------------------------------------------------------------
+
+" File search
+" NOTE: fzf must be installed inside Git Bash first:
+" Run in Git Bash: winget install junegunn.fzf  (then restart Git Bash)
+" Or via Git Bash: curl -Lo ~/.fzf.tar.gz https://github.com/junegunn/fzf/releases/latest/download/fzf-linux_amd64.tar.gz
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
+" Better syntax highlighting
+Plug 'sheerun/vim-polyglot'
+
+" Git integration
+Plug 'tpope/vim-fugitive'
+
+" Status line
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+call plug#end()
+
+
+" ------------------------------------------------------------
+" Plugin Settings
+" ------------------------------------------------------------
+
+let g:airline_powerline_fonts = 1
+let g:airline_theme='dark'
+let g:fzf_layout = { 'down': '40%' }
+
+
+" ------------------------------------------------------------
+" Filetype Specific Settings
+" ------------------------------------------------------------
+
+autocmd FileType c,cpp setlocal tabstop=4 shiftwidth=4 expandtab
+autocmd FileType python setlocal tabstop=4 shiftwidth=4 expandtab
+autocmd FileType make setlocal noexpandtab
+
+
+" ------------------------------------------------------------
+" Session Support
+" ------------------------------------------------------------
+
+set sessionoptions+=globals
+
+
+" ------------------------------------------------------------
+" Misc
+" ------------------------------------------------------------
+
+set updatetime=300
+set timeoutlen=500
+
+
+" ------------------------------------------------------------
+" End of vimrc
+" ------------------------------------------------------------
